@@ -1,25 +1,9 @@
 #!/bin/bash
 
-function diretorio (){
-  for i in $(ls); do
-   if [ -d $i ];then
-     echo " $i "
-   fi
-  done
-}
 
-function arquivo (){
-  for i in $(ls); do
-    if [ -f $j ]; then
-      echo " $j "
-    fi
-   done
-}
-
+echo "Olá! Você está agora no WINDOWS EXPLORER."
 
 while true; do
-  echo "Olá! Você está agora no WINDOWS EXPLORER."
-  echo "------------------------------"
   echo -e "Esses são seus arquivos:\n "
  
  for i in $(ls); do
@@ -46,11 +30,16 @@ while true; do
   echo " 6: Realizar backup de um arquivo ou diretório"
   echo " 7: Listar diretório atual "
   echo " 8: Pré-visualizar arquivo "
+  echo " 9: Ler um arquivo "
+  echo " 10: Compactar um arquivo "
+  echo " 11: Descompactar um arquivo "
+  echo " 12: Criar um diretório "
+  echo " 13: Criar um arquivo "
+  echo " 14: Sair do Windows Explorer"
   echo " ----------------------------------------------"
   read -p "Qual tarefa deseja realizar? " reply
   
   if [ $reply == "1" ]; then
-      diretorio
       read -p "Qual diretório deseja acessar? " diretorio
       if test -d $diretorio; then
          cd /$diretorio
@@ -67,7 +56,7 @@ while true; do
   fi
 
   if [ $reply == "3" ]; then
-     cd ..
+     cd -
      if [ $(pwd) == "/" ]; then
         echo "Você está no diretório raiz, não é possível voltar níveis"
      fi
@@ -86,7 +75,7 @@ while true; do
   if [ $reply == "5" ]; then
      read -p "Digite o nome do diretório a ser removido: " name
      if test -d $name; then
-        rmdir $name
+        rm -r $name
         echo "Diretório removido com sucesso!"
      else
         echo "Diretório inexistente, tente novamente"
@@ -113,7 +102,52 @@ while true; do
         echo "---------------------------------------"
         tail $preview
      else
-        "O arquivo não existe ou está corrompido"
+        echo  "O arquivo não existe ou está corrompido"
      fi
   fi
+ 
+
+  if [ $reply == "9" ]; then 
+     read -p "Qual arquivo você deseja abrir? " arq
+     if test -f $arq; then
+        cat $arq
+     else
+        echo "O arquivo não existe"
+     fi
+  fi
+  
+  if [ $reply == "10" ]; then
+     read -p "Qual arquivo deseja compactar? " arq
+     name=$arq
+     if test -f $arq; then
+        zip $name.zip $arq
+     else 
+        echo "O arquivo não foi encontrado"
+     fi
+  fi
+  
+  if [ $reply == "11" ]; then
+     read -p "Qual arquivo você deseja descompactar? " arq
+     if test -f $arq; then
+        unzip $arq
+     else 
+        "O arquivo não foi encontrado"
+     fi
+  fi
+  
+  if [ $reply == "12" ]; then
+     read -p "Qual o nome do diretório que deseja criar? " dir
+     mkdir $dir
+     echo "Diretório criado com sucesso!"
+  fi
+
+  if [ $reply == "13" ]; then
+      read -p "Qual o nome do arquivo que deseja criar? " arq
+      touch $arq
+  fi
+  
+  if [ $reply == "14" ]; then
+      exit 1
+  fi
+
 done
